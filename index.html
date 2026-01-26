@@ -2,7 +2,8 @@
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- VIEWPORT YANG DIPERBAIKI -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
     <title>Warung Habibie</title>
     <link rel="icon" type="image/png" href="wr.png" />
 
@@ -12,19 +13,31 @@
     />
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <style>
-      /* Reset & Base Styles */
+      /* Reset & Base Styles - SEMUA OVERFLOW DIHAPUS */
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      html {
+        overflow-x: hidden;
+        overflow-y: scroll;
+        -webkit-overflow-scrolling: touch;
+        height: 100%;
       }
 
       body {
         font-family: "Inter", sans-serif;
         background: #0f0f0f;
         color: #f5f5f5;
-        overflow-x: hidden;
         line-height: 1.6;
+        height: 100%;
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
       }
 
       h1,
@@ -44,6 +57,7 @@
 
       section {
         padding: 100px 0;
+        position: relative;
       }
 
       /* Header / Navigation */
@@ -64,7 +78,7 @@
         max-width: 1200px;
         margin: 0 auto;
         padding: 15px 25px;
-        background: rgba(79, 30, 10, 0.2); /* merah bata transparan */
+        background: rgba(79, 30, 10, 0.2);
         backdrop-filter: blur(15px);
         -webkit-backdrop-filter: blur(15px);
         border-radius: 15px;
@@ -111,11 +125,11 @@
       /* Hero Section */
       .hero {
         height: 100vh;
+        min-height: 650px;
         position: relative;
         display: flex;
         align-items: center;
         justify-content: center;
-        overflow: hidden;
       }
 
       .hero::before {
@@ -289,7 +303,6 @@
       .menu-card {
         background: rgba(26, 15, 11, 0.8);
         border-radius: 20px;
-        overflow: hidden;
         transition:
           transform 0.3s,
           box-shadow 0.3s;
@@ -303,7 +316,6 @@
 
       .menu-card-image {
         height: 200px;
-        overflow: hidden;
       }
 
       .menu-card-image img {
@@ -557,7 +569,7 @@
         box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
       }
 
-      /* Feedback Section - Baru dengan Desain Minimalis */
+      /* Feedback Section */
       .feedback {
         background: rgba(26, 15, 11, 0.6);
         padding: 80px 0;
@@ -606,7 +618,7 @@
         margin-bottom: 30px;
       }
 
-      /* TOMBOL YES - Desain Minimalis */
+      /* TOMBOL YES */
       #yesBtn {
         padding: 16px 40px;
         font-size: 1.1rem;
@@ -668,7 +680,7 @@
         transform: scale(1.1);
       }
 
-      /* TOMBOL NO - Desain Minimalis */
+      /* TOMBOL NO */
       #noBtn {
         padding: 16px 40px;
         font-size: 1.1rem;
@@ -863,7 +875,7 @@
         color: #ff6b35;
       }
 
-      /* Responsive */
+      /* =================== RESPONSIVE =================== */
       @media (max-width: 992px) {
         .hero-title {
           font-size: 3.5rem;
@@ -917,16 +929,51 @@
       }
 
       @media (max-width: 768px) {
+        /* FIX UTAMA UNTUK MOBILE SCROLL */
+        html, body {
+          overflow-x: hidden !important;
+          overflow-y: auto !important;
+          height: auto !important;
+          position: relative;
+          -webkit-overflow-scrolling: touch;
+        }
+        
+        body {
+          touch-action: pan-y;
+        }
+        
+        .container {
+          width: 95%;
+          padding: 0 15px;
+        }
+        
+        /* Pastikan semua elemen tidak overflow */
+        * {
+          max-width: 100%;
+        }
+
+        .hero {
+          height: auto;
+          min-height: 100vh;
+          padding: 120px 0 60px;
+        }
+
+        section {
+          padding: 60px 0;
+        }
+
         .nav-menu {
           position: fixed;
           top: 80px;
           left: -100%;
           width: 100%;
           flex-direction: column;
-          background: rgba(26, 15, 11, 0.95);
+          background: rgba(26, 15, 11, 0.98);
           backdrop-filter: blur(15px);
+          -webkit-backdrop-filter: blur(15px);
           padding: 20px;
           transition: left 0.3s;
+          z-index: 999;
         }
 
         .nav-menu.show {
@@ -934,7 +981,9 @@
         }
 
         .nav-menu li {
-          margin: 10px 0;
+          margin: 15px 0;
+          width: 100%;
+          text-align: center;
         }
 
         .nav-toggle {
@@ -988,9 +1037,36 @@
           flex-wrap: wrap;
           justify-content: center;
         }
+        
+        /* Hapus semua overflow yang mungkin menghalangi */
+        .menu-grid,
+        .menu-card,
+        .menu-card-image,
+        .order-form,
+        .order-grid {
+          overflow: visible !important;
+        }
       }
 
       @media (max-width: 480px) {
+        .hero {
+          padding: 100px 0 40px;
+          min-height: 90vh;
+        }
+        
+        .hero-title {
+          font-size: 2.2rem;
+        }
+        
+        .hero-subtitle {
+          font-size: 1rem;
+        }
+        
+        .hero-cta {
+          padding: 12px 25px;
+          font-size: 1rem;
+        }
+
         #yesBtn,
         #noBtn {
           width: 200px;
@@ -1025,6 +1101,21 @@
           min-width: 70px;
           font-size: 0.9rem;
         }
+        
+        .section-title {
+          font-size: 2rem;
+        }
+        
+        .section-subtitle {
+          font-size: 0.95rem;
+        }
+      }
+      
+      /* FIX KHUSUS UNTUK iOS SAFARI */
+      @supports (-webkit-touch-callout: none) {
+        .hero {
+          min-height: -webkit-fill-available;
+        }
       }
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -1054,7 +1145,6 @@
 
     <!-- Hero Section -->
     <section class="hero" id="hero">
-      <div class="hero-overlay"></div>
       <div class="hero-content">
         <h1 class="hero-title" data-aos="fade-up" data-aos-duration="1000">
           Seblak Panas. Rasa Nempel. Malam Jadi Milikmu.
@@ -1204,7 +1294,7 @@
       </div>
     </section>
 
-    <!-- Feedback Section (Baru dengan Desain Minimalis) -->
+    <!-- Feedback Section -->
     <section class="feedback" id="feedback">
       <div class="container">
         <div class="feedback-content">
@@ -1276,6 +1366,32 @@
     <!-- Scripts -->
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script>
+      // =================== FIX SCROLL MOBILE ===================
+      // 1. Pastikan body bisa scroll
+      document.body.style.overflow = 'auto';
+      document.body.style.height = 'auto';
+      
+      // 2. Hapus semua event listener yang mungkin menghalangi scroll
+      document.addEventListener('DOMContentLoaded', function() {
+        // Enable scrolling
+        document.documentElement.style.overflowY = 'scroll';
+        document.body.style.overflowY = 'scroll';
+        
+        // Fix untuk iOS
+        if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+          document.body.style.webkitOverflowScrolling = 'touch';
+        }
+      });
+
+      // 3. Prevent default hanya pada elemen tertentu
+      document.addEventListener('touchmove', function(e) {
+        // Biarkan semua touch event kecuali untuk elemen dengan class tertentu
+        if (!e.target.classList.contains('no-scroll')) {
+          return;
+        }
+        e.preventDefault();
+      }, { passive: false });
+
       // Inisialisasi AOS
       AOS.init({
         duration: 800,
@@ -1284,7 +1400,7 @@
         easing: "ease-in-out",
       });
 
-      // Data Menu berdasarkan Kategori dengan Sistem Prasmanan - DIUBAH
+      // Data Menu berdasarkan Kategori
       const menuData = {
         seblak: [
           {
@@ -1428,7 +1544,7 @@
         ],
       };
 
-      // Data semua menu untuk form pemesanan - DIUBAH
+      // Data semua menu untuk form pemesanan
       const allMenuItems = [...menuData.seblak, ...menuData.gorengan];
 
       // Object untuk menyimpan kuantitas pesanan
@@ -1442,7 +1558,6 @@
       // Fungsi untuk menampilkan menu di section menu (tanpa kuantitas)
       function renderMenuForDisplay(category) {
         const menuGrid = document.getElementById("menuGrid");
-        // Tambahkan animasi fade out
         menuGrid.classList.add("hidden");
 
         setTimeout(() => {
@@ -1469,7 +1584,6 @@
             menuGrid.appendChild(menuCard);
           });
 
-          // Tambahkan animasi fade in
           setTimeout(() => {
             menuGrid.classList.remove("hidden");
           }, 50);
@@ -1488,7 +1602,6 @@
           menuItem.className = "menu-quantity-item";
           menuItem.dataset.id = item.id;
 
-          // Hitung total per item
           const itemTotal = orderQuantities[item.id] * item.price;
 
           menuItem.innerHTML = `
@@ -1507,7 +1620,6 @@
           container.appendChild(menuItem);
         });
 
-        // Tambahkan event listener untuk tombol plus/minus
         container.querySelectorAll(".quantity-btn.plus").forEach((btn) => {
           btn.addEventListener("click", function () {
             const id = parseInt(this.dataset.id);
@@ -1554,7 +1666,7 @@
           `Rp ${total.toLocaleString("id-ID")}`;
       }
 
-      // Inisialisasi menu dengan kuantitas untuk form - DIUBAH
+      // Inisialisasi menu dengan kuantitas untuk form
       renderMenuWithQuantity("seblak", "menuSeblak");
       renderMenuWithQuantity("gorengan", "menuGorengan");
 
@@ -1565,18 +1677,12 @@
       // Event listener untuk tab kategori di section menu
       document.querySelectorAll("#menu .category-tab").forEach((tab) => {
         tab.addEventListener("click", function () {
-          // Hapus class active dari semua tab di section menu
           document.querySelectorAll("#menu .category-tab").forEach((t) => {
             t.classList.remove("active");
           });
 
-          // Tambah class active ke tab yang diklik
           this.classList.add("active");
-
-          // Ambil kategori dari data attribute
           const category = this.getAttribute("data-category");
-
-          // Render menu berdasarkan kategori
           renderMenuForDisplay(category);
         });
       });
@@ -1584,22 +1690,17 @@
       // Event listener untuk tab kategori di form
       document.querySelectorAll(".category-tab-form").forEach((tab) => {
         tab.addEventListener("click", function () {
-          // Hapus class active dari semua tab
           document.querySelectorAll(".category-tab-form").forEach((t) => {
             t.classList.remove("active");
           });
 
-          // Sembunyikan semua kontainer menu
           document
             .querySelectorAll(".menu-category-container")
             .forEach((container) => {
               container.classList.remove("active");
             });
 
-          // Tambah class active ke tab yang diklik
           this.classList.add("active");
-
-          // Tampilkan kontainer menu yang sesuai
           const category = this.dataset.category;
           document
             .getElementById(
@@ -1617,13 +1718,11 @@
           const whatsapp = document.getElementById("whatsapp").value;
           const alamat = document.getElementById("alamat").value;
 
-          // Validasi
           if (!nama || !whatsapp || !alamat) {
             alert("Harap isi semua data pemesan.");
             return;
           }
 
-          // Cek apakah ada pesanan
           const hasOrder = allMenuItems.some(
             (item) => orderQuantities[item.id] > 0,
           );
@@ -1632,17 +1731,14 @@
             return;
           }
 
-          // Format pesan
           let message = `Halo, saya ingin memesan:\n\n`;
           message += `Nama: ${nama}\n`;
           message += `WhatsApp: ${whatsapp}\n`;
           message += `Alamat: ${alamat}\n\n`;
           message += `Pesanan:\n`;
 
-          // Tambahkan pesanan untuk setiap kategori yang dipilih
           let total = 0;
 
-          // Seblak
           const seblakOrders = menuData.seblak.filter(
             (item) => orderQuantities[item.id] > 0,
           );
@@ -1656,7 +1752,6 @@
             });
           }
 
-          // Gorengan
           const gorenganOrders = menuData.gorengan.filter(
             (item) => orderQuantities[item.id] > 0,
           );
@@ -1673,12 +1768,10 @@
           message += `\n────────────────────\n`;
           message += `Total: Rp ${total.toLocaleString("id-ID")}`;
 
-          // Encode message untuk URL
           const encodedMessage = encodeURIComponent(message);
-          const phoneNumber = "082382733648"; // Ganti dengan nomor toko sebenarnya
+          const phoneNumber = "082382733648";
           const waURL = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
 
-          // Buka WhatsApp
           window.open(waURL, "_blank");
         });
 
@@ -1689,33 +1782,28 @@
           document.querySelector(".nav-menu").classList.toggle("show");
         });
 
-      // =================== FEEDBACK INTERAKTIF (MINIMALIS) ===================
+      // =================== FEEDBACK INTERAKTIF ===================
       const yesBtn = document.getElementById("yesBtn");
       const noBtn = document.getElementById("noBtn");
       const feedbackMessage = document.getElementById("feedbackMessage");
       const buttonsContainer = document.querySelector(".feedback-buttons");
 
-      // Dapatkan ukuran container tombol
       const containerRect = buttonsContainer.getBoundingClientRect();
       let containerWidth = containerRect.width;
       let containerHeight = containerRect.height;
       const buttonWidth = noBtn.offsetWidth;
       const buttonHeight = noBtn.offsetHeight;
 
-      // Posisi awal tombol NO (di sebelah tombol YES dengan jarak 20px)
       let noBtnX = containerWidth / 2 + buttonWidth / 2 + 20;
       let noBtnY = containerHeight / 2 - buttonHeight / 2;
 
-      // Atur posisi awal tombol NO
       noBtn.style.left = noBtnX + "px";
       noBtn.style.top = noBtnY + "px";
 
-      // Fungsi untuk mendapatkan posisi acak dalam container
       function getRandomPosition() {
         const maxX = containerWidth - buttonWidth - 10;
         const maxY = containerHeight - buttonHeight - 10;
 
-        // Pastikan posisi acak tidak terlalu dekat dengan tombol YES
         let randomX, randomY;
         const yesBtnRect = yesBtn.getBoundingClientRect();
         const containerLeft = buttonsContainer.getBoundingClientRect().left;
@@ -1724,7 +1812,6 @@
         const yesBtnX = yesBtnRect.left - containerLeft;
         const yesBtnY = yesBtnRect.top - containerTop;
 
-        // Coba maksimal 10 kali untuk mendapatkan posisi yang tidak terlalu dekat
         let attempts = 0;
         do {
           randomX = 5 + Math.random() * (maxX - 5);
@@ -1739,24 +1826,21 @@
         return { x: randomX, y: randomY };
       }
 
-      // Fungsi untuk menghitung jarak antara dua titik
       function getDistance(x1, y1, x2, y2) {
         return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
       }
 
-      // Variabel untuk tracking posisi kursor/sentuhan
       let cursorX = 0;
       let cursorY = 0;
       let isMobile = false;
 
-      // Deteksi perangkat mobile
       if ("ontouchstart" in window || navigator.maxTouchPoints) {
         isMobile = true;
       }
 
       // Event untuk mouse movement (desktop)
       document.addEventListener("mousemove", function (e) {
-        if (isMobile) return; // Skip jika mobile
+        if (isMobile) return;
 
         const containerRect = buttonsContainer.getBoundingClientRect();
         cursorX = e.clientX - containerRect.left;
@@ -1775,39 +1859,32 @@
           noBtnCenterY,
         );
 
-        // Jika kursor mendekati tombol NO (dalam radius 100px)
         if (distance < 100) {
-          // Hitung arah menjauh dari kursor
           const angle = Math.atan2(
             noBtnCenterY - cursorY,
             noBtnCenterX - cursorX,
           );
-          const moveDistance = 120; // Jarak pergerakan
+          const moveDistance = 120;
 
-          // Hitung posisi baru
           let newX =
             noBtnCenterX + Math.cos(angle) * moveDistance - buttonWidth / 2;
           let newY =
             noBtnCenterY + Math.sin(angle) * moveDistance - buttonHeight / 2;
 
-          // Pastikan tidak keluar dari container
           newX = Math.max(5, Math.min(newX, containerWidth - buttonWidth - 5));
           newY = Math.max(
             5,
             Math.min(newY, containerHeight - buttonHeight - 5),
           );
 
-          // Terapkan posisi baru dengan animasi halus
           noBtn.style.transition =
             "left 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
           noBtn.style.left = newX + "px";
           noBtn.style.top = newY + "px";
 
-          // Update posisi tombol NO
           noBtnX = newX;
           noBtnY = newY;
 
-          // Tambahkan efek visual halus
           noBtn.style.borderColor = "rgba(244, 67, 54, 0.6)";
           noBtn.style.boxShadow = "0 5px 15px rgba(244, 67, 54, 0.15)";
 
@@ -1818,18 +1895,17 @@
         }
       });
 
-      // Event untuk touch movement (mobile)
+      // Event untuk touch movement (mobile) - TANPA PREVENT DEFAULT
       let lastTouchTime = 0;
-      const touchCooldown = 120; // ms
+      const touchCooldown = 120;
 
       if (isMobile) {
         document.addEventListener(
           "touchmove",
           function (e) {
-            e.preventDefault();
+            // TIDAK ADA e.preventDefault() di sini agar scroll tetap bekerja
             const currentTime = new Date().getTime();
 
-            // Cooldown untuk menghindari terlalu banyak pergerakan
             if (currentTime - lastTouchTime < touchCooldown) return;
 
             lastTouchTime = currentTime;
@@ -1852,16 +1928,13 @@
               noBtnCenterY,
             );
 
-            // Jika sentuhan mendekati tombol NO (dalam radius 130px untuk mobile)
             if (distance < 130) {
-              // Hitung arah menjauh dari sentuhan
               const angle = Math.atan2(
                 noBtnCenterY - cursorY,
                 noBtnCenterX - cursorX,
               );
-              const moveDistance = 140; // Jarak pergerakan lebih besar untuk mobile
+              const moveDistance = 140;
 
-              // Hitung posisi baru
               let newX =
                 noBtnCenterX + Math.cos(angle) * moveDistance - buttonWidth / 2;
               let newY =
@@ -1869,7 +1942,6 @@
                 Math.sin(angle) * moveDistance -
                 buttonHeight / 2;
 
-              // Pastikan tidak keluar dari container
               newX = Math.max(
                 5,
                 Math.min(newX, containerWidth - buttonWidth - 5),
@@ -1879,17 +1951,14 @@
                 Math.min(newY, containerHeight - buttonHeight - 5),
               );
 
-              // Terapkan posisi baru dengan animasi
               noBtn.style.transition =
                 "left 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
               noBtn.style.left = newX + "px";
               noBtn.style.top = newY + "px";
 
-              // Update posisi tombol NO
               noBtnX = newX;
               noBtnY = newY;
 
-              // Tambahkan efek visual halus
               noBtn.style.borderColor = "rgba(244, 67, 54, 0.6)";
               noBtn.style.boxShadow = "0 5px 15px rgba(244, 67, 54, 0.15)";
 
@@ -1899,7 +1968,7 @@
               }, 500);
             }
           },
-          { passive: false },
+          { passive: true } // Gunakan passive: true untuk performa scroll
         );
       }
 
@@ -1909,7 +1978,6 @@
           '<i class="fas fa-laugh-beam message-icon"></i> iya kami tau itu';
         feedbackMessage.classList.add("show");
 
-        // Tambahkan efek pada tombol YES
         const originalHTML = yesBtn.innerHTML;
         const originalBorder = yesBtn.style.borderColor;
 
@@ -1917,7 +1985,6 @@
         yesBtn.style.background = "rgba(76, 175, 80, 0.1)";
         yesBtn.innerHTML = '<i class="fas fa-check-circle"></i> TERIMA KASIH';
 
-        // Reset tombol NO ke posisi awal setelah 2 detik
         setTimeout(() => {
           const initialX = containerWidth / 2 + buttonWidth / 2 + 20;
           const initialY = containerHeight / 2 - buttonHeight / 2;
@@ -1927,19 +1994,16 @@
           noBtn.style.left = initialX + "px";
           noBtn.style.top = initialY + "px";
 
-          // Update posisi tombol NO
           noBtnX = initialX;
           noBtnY = initialY;
         }, 2000);
 
-        // Kembalikan tombol YES ke keadaan semula setelah 3 detik
         setTimeout(() => {
           yesBtn.style.borderColor = originalBorder;
           yesBtn.style.background = "transparent";
           yesBtn.innerHTML = originalHTML;
         }, 3000);
 
-        // Sembunyikan pesan setelah 5 detik
         setTimeout(() => {
           feedbackMessage.classList.remove("show");
           setTimeout(() => {
@@ -1953,18 +2017,15 @@
         e.preventDefault();
         e.stopPropagation();
 
-        // Pindahkan tombol NO ke posisi acak saat berhasil disentuh
         const newPos = getRandomPosition();
         noBtn.style.transition =
           "left 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), top 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
         noBtn.style.left = newPos.x + "px";
         noBtn.style.top = newPos.y + "px";
 
-        // Update posisi tombol NO
         noBtnX = newPos.x;
         noBtnY = newPos.y;
 
-        // Tambahkan efek visual bahwa tombol menghindar
         const originalHTML = noBtn.innerHTML;
         noBtn.style.borderColor = "rgba(244, 67, 54, 0.8)";
         noBtn.style.background = "rgba(244, 67, 54, 0.1)";
@@ -1983,7 +2044,6 @@
         containerWidth = newContainerRect.width;
         containerHeight = newContainerRect.height;
 
-        // Reposisi tombol NO saat resize (kecuali di mobile dengan layout kolom)
         if (window.innerWidth > 768) {
           const newX = containerWidth / 2 + buttonWidth / 2 + 20;
           const newY = containerHeight / 2 - buttonHeight / 2;
@@ -1999,7 +2059,6 @@
       // Tambahkan efek hover pada tombol NO (hanya desktop)
       if (!isMobile) {
         noBtn.addEventListener("mouseenter", function () {
-          // Tambahkan efek gemetar halus saat kursor di atas tombol NO
           noBtn.style.animation = "subtleRunaway 0.6s ease";
           setTimeout(() => {
             noBtn.style.animation = "";
