@@ -2,18 +2,35 @@
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
-    <!-- VIEWPORT YANG DIPERBAIKI -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0, user-scalable=yes"
+    />
     <title>Warung Habibie</title>
     <link rel="icon" type="image/png" href="wr.png" />
 
+    <!-- SUPABASE SDK -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
+    <!-- FONT AWESOME -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
     />
+
+    <!-- AOS ANIMATION -->
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+    <!-- GOOGLE FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800;900&display=swap"
+      rel="stylesheet"
+    />
+
     <style>
-      /* Reset & Base Styles - SEMUA OVERFLOW DIHAPUS */
+      /* Reset & Base Styles */
       * {
         margin: 0;
         padding: 0;
@@ -92,6 +109,50 @@
         font-size: 1.8rem;
         font-weight: 900;
         color: #ff6b35;
+      }
+
+      /* Store Status */
+      .store-status {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 15px;
+        background: rgba(26, 15, 11, 0.8);
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        margin-left: auto;
+        margin-right: 20px;
+      }
+
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #4caf50;
+        animation: pulse 2s infinite;
+      }
+
+      .status-dot.closed {
+        background: #f44336;
+      }
+
+      .status-text {
+        color: #f5f5f5;
+      }
+
+      @keyframes pulse {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+        100% {
+          opacity: 1;
+        }
       }
 
       .nav-menu {
@@ -300,6 +361,7 @@
         pointer-events: none;
       }
 
+      /* Menu Card with Stock */
       .menu-card {
         background: rgba(26, 15, 11, 0.8);
         border-radius: 20px;
@@ -307,6 +369,12 @@
           transform 0.3s,
           box-shadow 0.3s;
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .menu-card.out-of-stock {
+        opacity: 0.8;
       }
 
       .menu-card:hover {
@@ -316,6 +384,8 @@
 
       .menu-card-image {
         height: 200px;
+        position: relative;
+        overflow: hidden;
       }
 
       .menu-card-image img {
@@ -325,8 +395,26 @@
         transition: transform 0.5s;
       }
 
+      .menu-card-image.grayscale img {
+        filter: grayscale(100%);
+        opacity: 0.6;
+      }
+
       .menu-card:hover .menu-card-image img {
         transform: scale(1.05);
+      }
+
+      .stock-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: rgba(244, 67, 54, 0.9);
+        color: white;
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        z-index: 2;
       }
 
       .menu-card-content {
@@ -349,6 +437,13 @@
         font-size: 1.5rem;
         font-weight: 700;
         color: #ff6b35;
+      }
+
+      .stock-info {
+        font-size: 0.9rem;
+        color: #4caf50;
+        margin-top: 8px;
+        font-weight: 500;
       }
 
       /* Order Section */
@@ -466,6 +561,11 @@
         transition: background 0.3s;
       }
 
+      .menu-quantity-item.disabled {
+        opacity: 0.6;
+        pointer-events: none;
+      }
+
       .menu-quantity-item:hover {
         background: rgba(255, 255, 255, 0.08);
       }
@@ -517,6 +617,11 @@
         transform: scale(0.95);
       }
 
+      .quantity-btn:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+      }
+
       .quantity-display {
         min-width: 40px;
         text-align: center;
@@ -530,6 +635,23 @@
         text-align: right;
         font-weight: 600;
         color: #ff8c42;
+      }
+
+      .stock-info-small {
+        font-size: 0.8rem;
+        color: #888;
+        margin-top: 4px;
+      }
+
+      .out-of-stock-label {
+        color: #f44336;
+        font-size: 0.9rem;
+        font-weight: bold;
+        margin-top: 8px;
+        padding: 4px 8px;
+        background: rgba(244, 67, 54, 0.1);
+        border-radius: 4px;
+        display: inline-block;
       }
 
       .total-price {
@@ -561,6 +683,11 @@
 
       .btn-wa:hover {
         background: #1da851;
+      }
+
+      .btn-wa:disabled {
+        background: #cccccc;
+        cursor: not-allowed;
       }
 
       .order-image img {
@@ -929,25 +1056,30 @@
       }
 
       @media (max-width: 768px) {
-        /* FIX UTAMA UNTUK MOBILE SCROLL */
-        html, body {
+        html,
+        body {
           overflow-x: hidden !important;
           overflow-y: auto !important;
           height: auto !important;
           position: relative;
           -webkit-overflow-scrolling: touch;
         }
-        
+
         body {
           touch-action: pan-y;
         }
-        
+
         .container {
           width: 95%;
           padding: 0 15px;
         }
-        
-        /* Pastikan semua elemen tidak overflow */
+
+        .store-status {
+          margin-right: 10px;
+          font-size: 0.8rem;
+          padding: 6px 12px;
+        }
+
         * {
           max-width: 100%;
         }
@@ -1037,8 +1169,7 @@
           flex-wrap: wrap;
           justify-content: center;
         }
-        
-        /* Hapus semua overflow yang mungkin menghalangi */
+
         .menu-grid,
         .menu-card,
         .menu-card-image,
@@ -1053,15 +1184,15 @@
           padding: 100px 0 40px;
           min-height: 90vh;
         }
-        
+
         .hero-title {
           font-size: 2.2rem;
         }
-        
+
         .hero-subtitle {
           font-size: 1rem;
         }
-        
+
         .hero-cta {
           padding: 12px 25px;
           font-size: 1rem;
@@ -1101,16 +1232,16 @@
           min-width: 70px;
           font-size: 0.9rem;
         }
-        
+
         .section-title {
           font-size: 2rem;
         }
-        
+
         .section-subtitle {
           font-size: 0.95rem;
         }
       }
-      
+
       /* FIX KHUSUS UNTUK iOS SAFARI */
       @supports (-webkit-touch-callout: none) {
         .hero {
@@ -1118,18 +1249,16 @@
         }
       }
     </style>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800;900&display=swap"
-      rel="stylesheet"
-    />
   </head>
   <body>
     <!-- Header / Navigation -->
     <header class="header">
       <nav class="nav">
         <div class="nav-logo">Warung Habibie</div>
+        <div class="store-status">
+          <span class="status-dot"></span>
+          <span class="status-text">Loading...</span>
+        </div>
         <ul class="nav-menu">
           <li><a href="#hero">Home</a></li>
           <li><a href="#about">Tentang</a></li>
@@ -1214,7 +1343,7 @@
 
         <!-- Menu Grid -->
         <div class="menu-grid" id="menuGrid">
-          <!-- Menu items akan diisi oleh JavaScript berdasarkan kategori -->
+          <!-- Menu items akan diisi oleh JavaScript -->
         </div>
       </div>
     </section>
@@ -1365,34 +1494,45 @@
 
     <!-- Scripts -->
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
     <script>
+      // =================== KONFIGURASI SUPABASE ===================
+      // GANTI DENGAN URL DAN KEY DARI PROJECT SUPABASE KAMU
+      const SUPABASE_URL = "https://eumouuwgmayjyagqxgti.supabase.co";
+      const SUPABASE_ANON_KEY =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV1bW91dXdnbWF5anlhZ3F4Z3RpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA0MDkzNzAsImV4cCI6MjA4NTk4NTM3MH0.B9wihoEOoo2hCbAVbr1q446HUxdHrgFGtPhKRhfVVAQ";
+
+      // =================== INISIALISASI SUPABASE ===================
+      const supabaseClient = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY,
+      );
+
       // =================== FIX SCROLL MOBILE ===================
-      // 1. Pastikan body bisa scroll
-      document.body.style.overflow = 'auto';
-      document.body.style.height = 'auto';
-      
-      // 2. Hapus semua event listener yang mungkin menghalangi scroll
-      document.addEventListener('DOMContentLoaded', function() {
-        // Enable scrolling
-        document.documentElement.style.overflowY = 'scroll';
-        document.body.style.overflowY = 'scroll';
-        
-        // Fix untuk iOS
+      document.body.style.overflow = "auto";
+      document.body.style.height = "auto";
+
+      document.addEventListener("DOMContentLoaded", function () {
+        document.documentElement.style.overflowY = "scroll";
+        document.body.style.overflowY = "scroll";
+
         if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-          document.body.style.webkitOverflowScrolling = 'touch';
+          document.body.style.webkitOverflowScrolling = "touch";
         }
       });
 
-      // 3. Prevent default hanya pada elemen tertentu
-      document.addEventListener('touchmove', function(e) {
-        // Biarkan semua touch event kecuali untuk elemen dengan class tertentu
-        if (!e.target.classList.contains('no-scroll')) {
-          return;
-        }
-        e.preventDefault();
-      }, { passive: false });
+      document.addEventListener(
+        "touchmove",
+        function (e) {
+          if (!e.target.classList.contains("no-scroll")) {
+            return;
+          }
+          e.preventDefault();
+        },
+        { passive: false },
+      );
 
-      // Inisialisasi AOS
+      // =================== INISIALISASI AOS ===================
       AOS.init({
         duration: 800,
         offset: 100,
@@ -1400,186 +1540,191 @@
         easing: "ease-in-out",
       });
 
-      // Data Menu berdasarkan Kategori
-      const menuData = {
-        seblak: [
-          {
-            id: 1,
-            name: "Telur Puyuh",
-            price: 1000,
-            description: "Telur puyuh rebus dengan tekstur kenyal dan gurih.",
-            image:
-              "https://i.pinimg.com/1200x/51/bf/13/51bf13fa75a73577c37e4ac3358a8ccb.jpg",
-          },
-          {
-            id: 2,
-            name: "Sawi",
-            price: 1000,
-            description: "Sawi segar untuk menambah nutrisi dan kesegaran.",
-            image: "sawi.jpg",
-          },
-          {
-            id: 3,
-            name: "Sosis Salju",
-            price: 1000,
-            description: "Sosis salju premium dengan rasa yang lembut.",
-            image:
-              "https://i0.wp.com/i.gojekapi.com/darkroom/gofood-indonesia/v2/images/uploads/bb16581f-7e5d-449e-8753-db5548cbd580_Go-Biz_20231113_190510.jpeg",
-          },
-          {
-            id: 4,
-            name: "Sosis Udang",
-            price: 1000,
-            description: "Sosis dengan campuran udang yang gurih.",
-            image:
-              "https://i.pinimg.com/736x/6d/be/e9/6dbee97534b5e36bfa732c9566b18ba2.jpg",
-          },
-          {
-            id: 5,
-            name: "Sosis Panjang",
-            price: 1000,
-            description: "Sosis panjang iris dengan tekstur kenyal.",
-            image:
-              "https://i.pinimg.com/736x/fc/5d/60/fc5d605e6d9f8bf7884569c9a1ef6013.jpg",
-          },
-          {
-            id: 6,
-            name: "Otak²",
-            price: 1000,
-            description: "Otak-otak ikan dengan bumbu khas yang gurih.",
-            image:
-              "https://i.gojekapi.com/darkroom/gofood-indonesia/v2/images/uploads/759e6338-30f3-4782-a835-a2af0e256f16_Go-Biz_20211215_154444.jpeg",
-          },
-          {
-            id: 7,
-            name: "Kelempang Kuning",
-            price: 1000,
-            description: "Kelempang kuning dengan tekstur renyah yang unik.",
-            image:
-              "https://img.lazcdn.com/g/ff/kf/S2c11197b2ce041babdde3e1b59558cae9.jpg_720x720q80.jpg",
-          },
-          {
-            id: 8,
-            name: "Kerupuk",
-            price: 1000,
-            description: "Kerupuk mentah yang direndam hingga kenyal sempurna.",
-            image:
-              "https://i.pinimg.com/1200x/77/98/b3/7798b33f3160f9bf089481177490e36d.jpg",
-          },
-          {
-            id: 9,
-            name: "Ceker",
-            price: 2000,
-            description:
-              "Ceker ayam empuk dengan bumbu meresap sampai ke tulang.",
-            image:
-              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSvcXh2GUFElHWAyg8D3RRd5I43apgoccamRA&s",
-          },
-          {
-            id: 10,
-            name: "Jamur Enoki",
-            price: 1000,
-            description: "Jamur enoki segar dengan tekstur renyah yang lembut.",
-            image:
-              "https://i.pinimg.com/736x/35/98/f9/3598f984985e068ab7eed04eec44bab0.jpg",
-          },
-        ],
-        gorengan: [
-          {
-            id: 11,
-            name: "Cireng Ayam Suwir",
-            price: 1000,
-            description: "Cireng isi ayam suwir dengan bumbu khas.",
-            image:
-              "https://i.pinimg.com/736x/a2/a3/0b/a2a30baac060705565171ab94bba8495.jpg",
-          },
-          {
-            id: 12,
-            name: "Pistel",
-            price: 1000,
-            description: "Pistel dengan isian bihun dan sayuran.",
-            image:
-              "https://cdn.rri.co.id/berita/Palembang/o/1723815498165-1000049344/aomfp8dkx70chtx.jpeg",
-          },
-          {
-            id: 13,
-            name: "Tahu Isi",
-            price: 1000,
-            description: "Tahu goreng dengan isian sayuran dan bumbu spesial.",
-            image:
-              "https://i.pinimg.com/736x/81/c2/94/81c2946c45bd2d79e40ef8cc41190ed8.jpg",
-          },
-          {
-            id: 14,
-            name: "Bakwan",
-            price: 1000,
-            description: "Bakwan sayur renyah dengan potongan wortel dan kol.",
-            image:
-              "https://i.pinimg.com/736x/2e/9f/a5/2e9fa5eaf539caeebf03093d9414ea27.jpg",
-          },
-          {
-            id: 15,
-            name: "Pisang Goreng",
-            price: 1000,
-            description: "Pisang goreng.",
-            image:
-              "https://i.pinimg.com/736x/70/99/91/7099917d8a89951418a87eba38c0fa19.jpg",
-          },
-          {
-            id: 16,
-            name: "Bakpau",
-            price: 1000,
-            description: "Bakpau goreng dengan isian coklat.",
-            image:
-              "https://i.pinimg.com/736x/56/3d/d0/563dd0bda54c27d88f889677768f8f23.jpg",
-          },
-          {
-            id: 17,
-            name: "Ubi Selo",
-            price: 1000,
-            description: "Ubi ungu goreng dengan rasa manis alami.",
-            image:
-              "https://cdn.yummy.co.id/content-images/images/20201015/J3MceRx7MKZLOnYJep5xSq2A6iF8rpNY-31363032373638303736d41d8cd98f00b204e9800998ecf8427e.jpg?x-oss-process=image/resize,w_600,h_600,m_fill,image/format,webp",
-          },
-        ],
+      // =================== VARIABEL GLOBAL ===================
+      let menuData = {
+        seblak: [],
+        gorengan: [],
       };
-
-      // Data semua menu untuk form pemesanan
-      const allMenuItems = [...menuData.seblak, ...menuData.gorengan];
-
-      // Object untuk menyimpan kuantitas pesanan
+      let allMenuItems = [];
       let orderQuantities = {};
+      let storeSettings = null;
 
-      // Inisialisasi kuantitas awal 0 untuk semua item
-      allMenuItems.forEach((item) => {
-        orderQuantities[item.id] = 0;
-      });
+      // =================== FUNGSI UTAMA ===================
+      async function initializeApp() {
+        console.log("🚀 Initializing Warung Habibie App...");
 
-      // Fungsi untuk menampilkan menu di section menu (tanpa kuantitas)
+        try {
+          // 1. Load menus dari Supabase
+          await loadMenusFromSupabase();
+
+          // 2. Check store status
+          await checkStoreStatus();
+
+          // 3. Setup auto-refresh setiap 30 detik
+          setInterval(checkStoreStatus, 30000);
+
+          console.log("✅ App initialized successfully");
+        } catch (error) {
+          console.error("❌ App initialization failed:", error);
+          // Fallback ke data lokal
+          loadFallbackMenuData();
+        }
+      }
+
+      // =================== FUNGSI SUPABASE ===================
+      async function loadMenusFromSupabase() {
+        try {
+          console.log("📋 Loading menus from Supabase...");
+
+          const { data: menus, error } = await supabaseClient
+            .from("menus")
+            .select("*")
+            .eq("is_active", true)
+            .order("category", { ascending: true });
+
+          if (error) throw error;
+
+          console.log(`✅ Loaded ${menus?.length || 0} menus`);
+
+          // Transform data
+          const transformedData = {
+            seblak: menus?.filter((menu) => menu.category === "seblak") || [],
+            gorengan:
+              menus?.filter((menu) => menu.category === "gorengan") || [],
+          };
+
+          // Update menuData
+          menuData = transformedData;
+          allMenuItems = [...menuData.seblak, ...menuData.gorengan];
+
+          // Initialize order quantities
+          allMenuItems.forEach((item) => {
+            orderQuantities[item.id] = 0;
+          });
+
+          // Render menus
+          renderMenuForDisplay("seblak");
+          renderMenuWithQuantity("seblak", "menuSeblak");
+          renderMenuWithQuantity("gorengan", "menuGorengan");
+          updateTotal();
+
+          return transformedData;
+        } catch (error) {
+          console.error("❌ Error loading menus:", error);
+          return null;
+        }
+      }
+
+      async function checkStoreStatus() {
+        try {
+          // Ambil data dari database
+          const { data: settings, error } = await supabaseClient
+            .from("store_settings")
+            .select("*")
+            .single();
+
+          if (error) {
+            console.error("❌ Error fetching store settings:", error);
+            updateStoreUI(true);
+            return true;
+          }
+
+          storeSettings = settings;
+
+          let isStoreOpen = settings.is_open;
+
+          // Cek jam operasional jika tidak manual override
+          if (!settings.manual_override) {
+            const now = new Date();
+            const currentTime = now.getHours() * 60 + now.getMinutes();
+
+            const [openHour, openMinute] = settings.open_time.split(":");
+            const [closeHour, closeMinute] = settings.close_time.split(":");
+
+            const openMinutes = parseInt(openHour) * 60 + parseInt(openMinute);
+            const closeMinutes =
+              parseInt(closeHour) * 60 + parseInt(closeMinute);
+
+            isStoreOpen =
+              currentTime >= openMinutes && currentTime <= closeMinutes;
+          }
+
+          updateStoreUI(isStoreOpen);
+          return isStoreOpen;
+        } catch (error) {
+          console.error("❌ Error in checkStoreStatus:", error);
+          updateStoreUI(true);
+          return true;
+        }
+      }
+
+      function updateStoreUI(isOpen) {
+        // Update status di header jika ada
+        const statusElement = document.querySelector(".store-status");
+        if (statusElement) {
+          const dot = statusElement.querySelector(".status-dot");
+          const text = statusElement.querySelector(".status-text");
+
+          if (dot) dot.className = isOpen ? "status-dot" : "status-dot closed";
+          if (text) text.textContent = isOpen ? "TOKO BUKA" : "TOKO TUTUP";
+        }
+
+        // Update form pemesanan
+        const orderForm = document.getElementById("pemesananForm");
+        const pesanButton = document.getElementById("btnPesan");
+
+        if (orderForm && pesanButton) {
+          if (!isOpen) {
+            orderForm.style.opacity = "0.6";
+            orderForm.style.pointerEvents = "none";
+            pesanButton.disabled = true;
+            pesanButton.style.opacity = "0.5";
+            pesanButton.style.cursor = "not-allowed";
+            pesanButton.innerHTML =
+              '<i class="fas fa-store-slash"></i> Toko Tutup';
+          } else {
+            orderForm.style.opacity = "1";
+            orderForm.style.pointerEvents = "auto";
+            pesanButton.disabled = false;
+            pesanButton.style.opacity = "1";
+            pesanButton.style.cursor = "pointer";
+            pesanButton.innerHTML =
+              '<i class="fab fa-whatsapp"></i> Pesan via WhatsApp';
+          }
+        }
+      }
+
+      // =================== RENDER FUNGSI ===================
       function renderMenuForDisplay(category) {
         const menuGrid = document.getElementById("menuGrid");
+        if (!menuGrid) return;
+
         menuGrid.classList.add("hidden");
 
         setTimeout(() => {
           menuGrid.innerHTML = "";
 
-          const items = menuData[category];
+          const items = menuData[category] || [];
           items.forEach((item, index) => {
+            const isOutOfStock = item.stock === 0;
+
             const menuCard = document.createElement("div");
-            menuCard.className = "menu-card";
+            menuCard.className = `menu-card ${isOutOfStock ? "out-of-stock" : ""}`;
             menuCard.setAttribute("data-aos", "fade-up");
             menuCard.setAttribute("data-aos-delay", (index * 100).toString());
 
             menuCard.innerHTML = `
-              <div class="menu-card-image">
-                <img src="${item.image}" alt="${item.name}" loading="lazy">
-              </div>
-              <div class="menu-card-content">
-                <h3>${item.name}</h3>
-                <p>${item.description}</p>
-                <div class="menu-card-price">Rp ${item.price.toLocaleString("id-ID")}</div>
-              </div>
-            `;
+          <div class="menu-card-image ${isOutOfStock ? "grayscale" : ""}">
+            <img src="${item.image_url || item.image || "https://via.placeholder.com/300x200?text=Menu+Image"}" alt="${item.name}" loading="lazy">
+            ${isOutOfStock ? '<div class="stock-badge">HABIS</div>' : ""}
+          </div>
+          <div class="menu-card-content">
+            <h3>${item.name}</h3>
+            <p>${item.description || "Menu lezat khas Warung Habibie"}</p>
+            <div class="menu-card-price">Rp ${(item.price || 0).toLocaleString("id-ID")}</div>
+            ${item.stock > 0 ? `<div class="stock-info">Stok: ${item.stock}</div>` : ""}
+          </div>
+        `;
 
             menuGrid.appendChild(menuCard);
           });
@@ -1590,50 +1735,77 @@
         }, 400);
       }
 
-      // Fungsi untuk render menu dengan kontrol kuantitas
       function renderMenuWithQuantity(category, containerId) {
         const container = document.getElementById(containerId);
-        const items = menuData[category];
+        if (!container) return;
+
+        const items = menuData[category] || [];
 
         container.innerHTML = "";
 
         items.forEach((item) => {
+          const isOutOfStock = item.stock === 0;
           const menuItem = document.createElement("div");
-          menuItem.className = "menu-quantity-item";
+          menuItem.className = `menu-quantity-item ${isOutOfStock ? "disabled" : ""}`;
           menuItem.dataset.id = item.id;
 
-          const itemTotal = orderQuantities[item.id] * item.price;
+          if (isOutOfStock) {
+            menuItem.innerHTML = `
+          <div class="menu-quantity-info">
+            <div class="menu-quantity-name" style="color: #888">${item.name}</div>
+            <div class="menu-quantity-price">Rp ${(item.price || 0).toLocaleString("id-ID")}</div>
+            <div class="out-of-stock-label">STOK HABIS</div>
+          </div>
+        `;
+          } else {
+            const itemTotal =
+              (orderQuantities[item.id] || 0) * (item.price || 0);
+            const maxQuantity = Math.min(item.stock, 10);
 
-          menuItem.innerHTML = `
-            <div class="menu-quantity-info">
-              <div class="menu-quantity-name">${item.name}</div>
-              <div class="menu-quantity-price">Rp ${item.price.toLocaleString("id-ID")}</div>
-            </div>
-            <div class="menu-quantity-controls">
-              <button type="button" class="quantity-btn minus" data-id="${item.id}">-</button>
-              <div class="quantity-display" id="quantity-${item.id}">${orderQuantities[item.id]}</div>
-              <button type="button" class="quantity-btn plus" data-id="${item.id}">+</button>
-              <div class="quantity-total" id="total-${item.id}">Rp ${itemTotal.toLocaleString("id-ID")}</div>
-            </div>
-          `;
+            menuItem.innerHTML = `
+          <div class="menu-quantity-info">
+            <div class="menu-quantity-name">${item.name}</div>
+            <div class="menu-quantity-price">Rp ${(item.price || 0).toLocaleString("id-ID")}</div>
+            <div class="stock-info-small">Stok: ${item.stock}</div>
+          </div>
+          <div class="menu-quantity-controls">
+            <button type="button" class="quantity-btn minus" data-id="${item.id}">-</button>
+            <div class="quantity-display" id="quantity-${item.id}">${orderQuantities[item.id] || 0}</div>
+            <button type="button" class="quantity-btn plus" data-id="${item.id}">+</button>
+            <div class="quantity-total" id="total-${item.id}">Rp ${itemTotal.toLocaleString("id-ID")}</div>
+          </div>
+        `;
+          }
 
           container.appendChild(menuItem);
         });
 
+        // Event listeners untuk tombol kuantitas - FIXED VERSION
         container.querySelectorAll(".quantity-btn.plus").forEach((btn) => {
           btn.addEventListener("click", function () {
             const id = parseInt(this.dataset.id);
-            orderQuantities[id]++;
-            updateQuantityDisplay(id);
-            updateTotal();
+            const item = allMenuItems.find((m) => m.id === id);
+
+            if (item && !item.disabled) {
+              const maxQuantity = Math.min(item.stock, 10);
+              const currentQuantity = orderQuantities[id] || 0;
+
+              if (currentQuantity < maxQuantity) {
+                orderQuantities[id] = currentQuantity + 1;
+                updateQuantityDisplay(id);
+                updateTotal();
+              }
+            }
           });
         });
 
         container.querySelectorAll(".quantity-btn.minus").forEach((btn) => {
           btn.addEventListener("click", function () {
             const id = parseInt(this.dataset.id);
-            if (orderQuantities[id] > 0) {
-              orderQuantities[id]--;
+            const currentQuantity = orderQuantities[id] || 0;
+
+            if (currentQuantity > 0) {
+              orderQuantities[id] = currentQuantity - 1;
               updateQuantityDisplay(id);
               updateTotal();
             }
@@ -1641,40 +1813,125 @@
         });
       }
 
-      // Fungsi untuk update tampilan kuantitas
       function updateQuantityDisplay(itemId) {
         const quantityDisplay = document.getElementById(`quantity-${itemId}`);
         const totalDisplay = document.getElementById(`total-${itemId}`);
+        const item = allMenuItems.find((m) => m.id == itemId);
 
-        if (quantityDisplay && totalDisplay) {
-          const item = allMenuItems.find((m) => m.id === itemId);
-          quantityDisplay.textContent = orderQuantities[itemId];
-          const itemTotal = orderQuantities[itemId] * item.price;
+        if (quantityDisplay && totalDisplay && item) {
+          const quantity = orderQuantities[itemId] || 0;
+          quantityDisplay.textContent = quantity;
+
+          const itemTotal = quantity * item.price;
           totalDisplay.textContent = `Rp ${itemTotal.toLocaleString("id-ID")}`;
+
+          // Update tombol state
+          const plusBtn = document.querySelector(`.plus[data-id="${itemId}"]`);
+          const minusBtn = document.querySelector(
+            `.minus[data-id="${itemId}"]`,
+          );
+          const maxQuantity = Math.min(item.stock, 10);
+
+          if (plusBtn) {
+            plusBtn.disabled = quantity >= maxQuantity;
+            plusBtn.style.opacity = quantity >= maxQuantity ? "0.5" : "1";
+            plusBtn.style.cursor =
+              quantity >= maxQuantity ? "not-allowed" : "pointer";
+          }
+
+          if (minusBtn) {
+            minusBtn.disabled = quantity === 0;
+            minusBtn.style.opacity = quantity === 0 ? "0.5" : "1";
+            minusBtn.style.cursor = quantity === 0 ? "not-allowed" : "pointer";
+          }
         }
       }
 
-      // Fungsi untuk menghitung total harga
       function updateTotal() {
         let total = 0;
 
         allMenuItems.forEach((item) => {
-          total += orderQuantities[item.id] * item.price;
+          total += (orderQuantities[item.id] || 0) * (item.price || 0);
         });
 
-        document.getElementById("totalHarga").textContent =
-          `Rp ${total.toLocaleString("id-ID")}`;
+        const totalHargaElement = document.getElementById("totalHarga");
+        if (totalHargaElement) {
+          totalHargaElement.textContent = `Rp ${total.toLocaleString("id-ID")}`;
+        }
       }
 
-      // Inisialisasi menu dengan kuantitas untuk form
-      renderMenuWithQuantity("seblak", "menuSeblak");
-      renderMenuWithQuantity("gorengan", "menuGorengan");
+      // =================== FALLBACK DATA ===================
+      function loadFallbackMenuData() {
+        console.log("⚠️ Using fallback menu data");
 
-      // Inisialisasi menu untuk display (section menu)
-      renderMenuForDisplay("seblak");
-      updateTotal();
+        menuData = {
+          seblak: [
+            {
+              id: 1,
+              name: "Telur Puyuh",
+              price: 1000,
+              description: "Telur puyuh rebus dengan tekstur kenyal dan gurih.",
+              image:
+                "https://i.pinimg.com/1200x/51/bf/13/51bf13fa75a73577c37e4ac3358a8ccb.jpg",
+              stock: 50,
+            },
+            {
+              id: 2,
+              name: "Sawi",
+              price: 1000,
+              description: "Sawi segar untuk menambah nutrisi dan kesegaran.",
+              image:
+                "https://img.freepik.com/free-photo/close-up-fresh-vegetables_23-2148883476.jpg",
+              stock: 30,
+            },
+            {
+              id: 3,
+              name: "Sosis Salju",
+              price: 1000,
+              description: "Sosis salju premium dengan rasa yang lembut.",
+              image:
+                "https://i0.wp.com/i.gojekapi.com/darkroom/gofood-indonesia/v2/images/uploads/bb16581f-7e5d-449e-8753-db5548cbd580_Go-Biz_20231113_190510.jpeg",
+              stock: 40,
+            },
+          ],
+          gorengan: [
+            {
+              id: 11,
+              name: "Cireng Ayam Suwir",
+              price: 1000,
+              description: "Cireng isi ayam suwir dengan bumbu khas.",
+              image:
+                "https://i.pinimg.com/736x/a2/a3/0b/a2a30baac060705565171ab94bba8495.jpg",
+              stock: 40,
+            },
+            {
+              id: 12,
+              name: "Pistel",
+              price: 1000,
+              description: "Pistel dengan isian bihun dan sayuran.",
+              image:
+                "https://cdn.rri.co.id/berita/Palembang/o/1723815498165-1000049344/aomfp8dkx70chtx.jpeg",
+              stock: 35,
+            },
+          ],
+        };
 
-      // Event listener untuk tab kategori di section menu
+        allMenuItems = [...menuData.seblak, ...menuData.gorengan];
+
+        // Initialize order quantities
+        allMenuItems.forEach((item) => {
+          orderQuantities[item.id] = 0;
+        });
+
+        // Render menus
+        renderMenuForDisplay("seblak");
+        renderMenuWithQuantity("seblak", "menuSeblak");
+        renderMenuWithQuantity("gorengan", "menuGorengan");
+        updateTotal();
+      }
+
+      // =================== EVENT LISTENERS ===================
+      // Tab kategori di section menu
       document.querySelectorAll("#menu .category-tab").forEach((tab) => {
         tab.addEventListener("click", function () {
           document.querySelectorAll("#menu .category-tab").forEach((t) => {
@@ -1687,7 +1944,7 @@
         });
       });
 
-      // Event listener untuk tab kategori di form
+      // Tab kategori di form - FIXED VERSION
       document.querySelectorAll(".category-tab-form").forEach((tab) => {
         tab.addEventListener("click", function () {
           document.querySelectorAll(".category-tab-form").forEach((t) => {
@@ -1702,21 +1959,21 @@
 
           this.classList.add("active");
           const category = this.dataset.category;
-          document
-            .getElementById(
-              `menu${category.charAt(0).toUpperCase() + category.slice(1)}`,
-            )
-            .classList.add("active");
+          const containerId = `menu${category.charAt(0).toUpperCase() + category.slice(1)}`;
+          const container = document.getElementById(containerId);
+          if (container) {
+            container.classList.add("active");
+          }
         });
       });
 
-      // Tombol Pesan via WhatsApp
-      document
-        .getElementById("btnPesan")
-        .addEventListener("click", function () {
-          const nama = document.getElementById("nama").value;
-          const whatsapp = document.getElementById("whatsapp").value;
-          const alamat = document.getElementById("alamat").value;
+      // Tombol Pesan via WhatsApp - FIXED VERSION
+      const pesanButton = document.getElementById("btnPesan");
+      if (pesanButton) {
+        pesanButton.addEventListener("click", function () {
+          const nama = document.getElementById("nama")?.value;
+          const whatsapp = document.getElementById("whatsapp")?.value;
+          const alamat = document.getElementById("alamat")?.value;
 
           if (!nama || !whatsapp || !alamat) {
             alert("Harap isi semua data pemesan.");
@@ -1724,10 +1981,16 @@
           }
 
           const hasOrder = allMenuItems.some(
-            (item) => orderQuantities[item.id] > 0,
+            (item) => (orderQuantities[item.id] || 0) > 0,
           );
           if (!hasOrder) {
             alert("Harap pilih minimal satu menu.");
+            return;
+          }
+
+          // Cek jika toko buka
+          if (storeSettings && !storeSettings.is_open) {
+            alert("Maaf, toko sedang tutup. Silakan pesan saat toko buka.");
             return;
           }
 
@@ -1740,26 +2003,26 @@
           let total = 0;
 
           const seblakOrders = menuData.seblak.filter(
-            (item) => orderQuantities[item.id] > 0,
+            (item) => (orderQuantities[item.id] || 0) > 0,
           );
           if (seblakOrders.length > 0) {
             message += `\n🔴 SEBLAK:\n`;
             seblakOrders.forEach((item) => {
-              const quantity = orderQuantities[item.id];
-              const itemTotal = quantity * item.price;
+              const quantity = orderQuantities[item.id] || 0;
+              const itemTotal = quantity * (item.price || 0);
               message += `- ${item.name} (${quantity}x) = Rp ${itemTotal.toLocaleString("id-ID")}\n`;
               total += itemTotal;
             });
           }
 
           const gorenganOrders = menuData.gorengan.filter(
-            (item) => orderQuantities[item.id] > 0,
+            (item) => (orderQuantities[item.id] || 0) > 0,
           );
           if (gorenganOrders.length > 0) {
             message += `\n🟡 GORENGAN:\n`;
             gorenganOrders.forEach((item) => {
-              const quantity = orderQuantities[item.id];
-              const itemTotal = quantity * item.price;
+              const quantity = orderQuantities[item.id] || 0;
+              const itemTotal = quantity * (item.price || 0);
               message += `- ${item.name} (${quantity}x) = Rp ${itemTotal.toLocaleString("id-ID")}\n`;
               total += itemTotal;
             });
@@ -1774,146 +2037,83 @@
 
           window.open(waURL, "_blank");
         });
+      }
 
       // Toggle Menu Mobile
-      document
-        .querySelector(".nav-toggle")
-        .addEventListener("click", function () {
-          document.querySelector(".nav-menu").classList.toggle("show");
+      const navToggle = document.querySelector(".nav-toggle");
+      if (navToggle) {
+        navToggle.addEventListener("click", function () {
+          const navMenu = document.querySelector(".nav-menu");
+          if (navMenu) navMenu.classList.toggle("show");
         });
+      }
 
       // =================== FEEDBACK INTERAKTIF ===================
-      const yesBtn = document.getElementById("yesBtn");
-      const noBtn = document.getElementById("noBtn");
-      const feedbackMessage = document.getElementById("feedbackMessage");
-      const buttonsContainer = document.querySelector(".feedback-buttons");
+      // Inisialisasi feedback buttons
+      function initializeFeedbackButtons() {
+        const yesBtn = document.getElementById("yesBtn");
+        const noBtn = document.getElementById("noBtn");
+        const feedbackMessage = document.getElementById("feedbackMessage");
+        const buttonsContainer = document.querySelector(".feedback-buttons");
 
-      const containerRect = buttonsContainer.getBoundingClientRect();
-      let containerWidth = containerRect.width;
-      let containerHeight = containerRect.height;
-      const buttonWidth = noBtn.offsetWidth;
-      const buttonHeight = noBtn.offsetHeight;
-
-      let noBtnX = containerWidth / 2 + buttonWidth / 2 + 20;
-      let noBtnY = containerHeight / 2 - buttonHeight / 2;
-
-      noBtn.style.left = noBtnX + "px";
-      noBtn.style.top = noBtnY + "px";
-
-      function getRandomPosition() {
-        const maxX = containerWidth - buttonWidth - 10;
-        const maxY = containerHeight - buttonHeight - 10;
-
-        let randomX, randomY;
-        const yesBtnRect = yesBtn.getBoundingClientRect();
-        const containerLeft = buttonsContainer.getBoundingClientRect().left;
-        const containerTop = buttonsContainer.getBoundingClientRect().top;
-
-        const yesBtnX = yesBtnRect.left - containerLeft;
-        const yesBtnY = yesBtnRect.top - containerTop;
-
-        let attempts = 0;
-        do {
-          randomX = 5 + Math.random() * (maxX - 5);
-          randomY = 5 + Math.random() * (maxY - 5);
-          attempts++;
-        } while (
-          Math.abs(randomX - yesBtnX) < buttonWidth + 20 &&
-          Math.abs(randomY - yesBtnY) < buttonHeight + 20 &&
-          attempts < 10
-        );
-
-        return { x: randomX, y: randomY };
-      }
-
-      function getDistance(x1, y1, x2, y2) {
-        return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-      }
-
-      let cursorX = 0;
-      let cursorY = 0;
-      let isMobile = false;
-
-      if ("ontouchstart" in window || navigator.maxTouchPoints) {
-        isMobile = true;
-      }
-
-      // Event untuk mouse movement (desktop)
-      document.addEventListener("mousemove", function (e) {
-        if (isMobile) return;
+        if (!yesBtn || !noBtn || !feedbackMessage || !buttonsContainer) return;
 
         const containerRect = buttonsContainer.getBoundingClientRect();
-        cursorX = e.clientX - containerRect.left;
-        cursorY = e.clientY - containerRect.top;
+        let containerWidth = containerRect.width;
+        let containerHeight = containerRect.height;
+        const buttonWidth = noBtn.offsetWidth;
+        const buttonHeight = noBtn.offsetHeight;
 
-        const noBtnRect = noBtn.getBoundingClientRect();
-        const noBtnCenterX =
-          noBtnRect.left - containerRect.left + buttonWidth / 2;
-        const noBtnCenterY =
-          noBtnRect.top - containerRect.top + buttonHeight / 2;
+        let noBtnX = containerWidth / 2 + buttonWidth / 2 + 20;
+        let noBtnY = containerHeight / 2 - buttonHeight / 2;
 
-        const distance = getDistance(
-          cursorX,
-          cursorY,
-          noBtnCenterX,
-          noBtnCenterY,
-        );
+        noBtn.style.left = noBtnX + "px";
+        noBtn.style.top = noBtnY + "px";
 
-        if (distance < 100) {
-          const angle = Math.atan2(
-            noBtnCenterY - cursorY,
-            noBtnCenterX - cursorX,
+        function getRandomPosition() {
+          const maxX = containerWidth - buttonWidth - 10;
+          const maxY = containerHeight - buttonHeight - 10;
+
+          let randomX, randomY;
+          const yesBtnRect = yesBtn.getBoundingClientRect();
+          const containerLeft = buttonsContainer.getBoundingClientRect().left;
+          const containerTop = buttonsContainer.getBoundingClientRect().top;
+
+          const yesBtnX = yesBtnRect.left - containerLeft;
+          const yesBtnY = yesBtnRect.top - containerTop;
+
+          let attempts = 0;
+          do {
+            randomX = 5 + Math.random() * (maxX - 5);
+            randomY = 5 + Math.random() * (maxY - 5);
+            attempts++;
+          } while (
+            Math.abs(randomX - yesBtnX) < buttonWidth + 20 &&
+            Math.abs(randomY - yesBtnY) < buttonHeight + 20 &&
+            attempts < 10
           );
-          const moveDistance = 120;
 
-          let newX =
-            noBtnCenterX + Math.cos(angle) * moveDistance - buttonWidth / 2;
-          let newY =
-            noBtnCenterY + Math.sin(angle) * moveDistance - buttonHeight / 2;
-
-          newX = Math.max(5, Math.min(newX, containerWidth - buttonWidth - 5));
-          newY = Math.max(
-            5,
-            Math.min(newY, containerHeight - buttonHeight - 5),
-          );
-
-          noBtn.style.transition =
-            "left 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
-          noBtn.style.left = newX + "px";
-          noBtn.style.top = newY + "px";
-
-          noBtnX = newX;
-          noBtnY = newY;
-
-          noBtn.style.borderColor = "rgba(244, 67, 54, 0.6)";
-          noBtn.style.boxShadow = "0 5px 15px rgba(244, 67, 54, 0.15)";
-
-          setTimeout(() => {
-            noBtn.style.borderColor = "rgba(244, 67, 54, 0.3)";
-            noBtn.style.boxShadow = "none";
-          }, 400);
+          return { x: randomX, y: randomY };
         }
-      });
 
-      // Event untuk touch movement (mobile) - TANPA PREVENT DEFAULT
-      let lastTouchTime = 0;
-      const touchCooldown = 120;
+        function getDistance(x1, y1, x2, y2) {
+          return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+        }
 
-      if (isMobile) {
-        document.addEventListener(
-          "touchmove",
-          function (e) {
-            // TIDAK ADA e.preventDefault() di sini agar scroll tetap bekerja
-            const currentTime = new Date().getTime();
+        let cursorX = 0;
+        let cursorY = 0;
+        let isMobile = false;
 
-            if (currentTime - lastTouchTime < touchCooldown) return;
+        if ("ontouchstart" in window || navigator.maxTouchPoints) {
+          isMobile = true;
+        }
 
-            lastTouchTime = currentTime;
-
-            const touch = e.touches[0];
+        // Event untuk mouse movement (desktop)
+        if (!isMobile) {
+          document.addEventListener("mousemove", function (e) {
             const containerRect = buttonsContainer.getBoundingClientRect();
-            cursorX = touch.clientX - containerRect.left;
-            cursorY = touch.clientY - containerRect.top;
+            cursorX = e.clientX - containerRect.left;
+            cursorY = e.clientY - containerRect.top;
 
             const noBtnRect = noBtn.getBoundingClientRect();
             const noBtnCenterX =
@@ -1928,12 +2128,12 @@
               noBtnCenterY,
             );
 
-            if (distance < 130) {
+            if (distance < 100) {
               const angle = Math.atan2(
                 noBtnCenterY - cursorY,
                 noBtnCenterX - cursorX,
               );
-              const moveDistance = 140;
+              const moveDistance = 120;
 
               let newX =
                 noBtnCenterX + Math.cos(angle) * moveDistance - buttonWidth / 2;
@@ -1952,7 +2152,7 @@
               );
 
               noBtn.style.transition =
-                "left 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
+                "left 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
               noBtn.style.left = newX + "px";
               noBtn.style.top = newY + "px";
 
@@ -1965,107 +2165,131 @@
               setTimeout(() => {
                 noBtn.style.borderColor = "rgba(244, 67, 54, 0.3)";
                 noBtn.style.boxShadow = "none";
-              }, 500);
+              }, 400);
             }
-          },
-          { passive: true } // Gunakan passive: true untuk performa scroll
-        );
-      }
-
-      // Event untuk klik tombol YES
-      yesBtn.addEventListener("click", function () {
-        feedbackMessage.innerHTML =
-          '<i class="fas fa-laugh-beam message-icon"></i> iya kami tau itu';
-        feedbackMessage.classList.add("show");
-
-        const originalHTML = yesBtn.innerHTML;
-        const originalBorder = yesBtn.style.borderColor;
-
-        yesBtn.style.borderColor = "rgba(76, 175, 80, 0.8)";
-        yesBtn.style.background = "rgba(76, 175, 80, 0.1)";
-        yesBtn.innerHTML = '<i class="fas fa-check-circle"></i> TERIMA KASIH';
-
-        setTimeout(() => {
-          const initialX = containerWidth / 2 + buttonWidth / 2 + 20;
-          const initialY = containerHeight / 2 - buttonHeight / 2;
-
-          noBtn.style.transition =
-            "left 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), top 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
-          noBtn.style.left = initialX + "px";
-          noBtn.style.top = initialY + "px";
-
-          noBtnX = initialX;
-          noBtnY = initialY;
-        }, 2000);
-
-        setTimeout(() => {
-          yesBtn.style.borderColor = originalBorder;
-          yesBtn.style.background = "transparent";
-          yesBtn.innerHTML = originalHTML;
-        }, 3000);
-
-        setTimeout(() => {
-          feedbackMessage.classList.remove("show");
-          setTimeout(() => {
-            feedbackMessage.innerHTML = "";
-          }, 500);
-        }, 5000);
-      });
-
-      // Event untuk mencoba klik tombol NO
-      noBtn.addEventListener("click", function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        const newPos = getRandomPosition();
-        noBtn.style.transition =
-          "left 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), top 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
-        noBtn.style.left = newPos.x + "px";
-        noBtn.style.top = newPos.y + "px";
-
-        noBtnX = newPos.x;
-        noBtnY = newPos.y;
-
-        const originalHTML = noBtn.innerHTML;
-        noBtn.style.borderColor = "rgba(244, 67, 54, 0.8)";
-        noBtn.style.background = "rgba(244, 67, 54, 0.1)";
-        noBtn.innerHTML = '<i class="fas fa-running"></i> COBA LAGI';
-
-        setTimeout(() => {
-          noBtn.style.borderColor = "rgba(244, 67, 54, 0.3)";
-          noBtn.style.background = "transparent";
-          noBtn.innerHTML = originalHTML;
-        }, 600);
-      });
-
-      // Event untuk resize window
-      window.addEventListener("resize", function () {
-        const newContainerRect = buttonsContainer.getBoundingClientRect();
-        containerWidth = newContainerRect.width;
-        containerHeight = newContainerRect.height;
-
-        if (window.innerWidth > 768) {
-          const newX = containerWidth / 2 + buttonWidth / 2 + 20;
-          const newY = containerHeight / 2 - buttonHeight / 2;
-
-          noBtn.style.left = newX + "px";
-          noBtn.style.top = newY + "px";
-
-          noBtnX = newX;
-          noBtnY = newY;
+          });
         }
-      });
 
-      // Tambahkan efek hover pada tombol NO (hanya desktop)
-      if (!isMobile) {
-        noBtn.addEventListener("mouseenter", function () {
-          noBtn.style.animation = "subtleRunaway 0.6s ease";
+        // Event untuk klik tombol YES
+        yesBtn.addEventListener("click", function () {
+          feedbackMessage.innerHTML =
+            '<i class="fas fa-laugh-beam message-icon"></i> iya kami tau itu';
+          feedbackMessage.classList.add("show");
+
+          const originalHTML = yesBtn.innerHTML;
+          const originalBorder = yesBtn.style.borderColor;
+
+          yesBtn.style.borderColor = "rgba(76, 175, 80, 0.8)";
+          yesBtn.style.background = "rgba(76, 175, 80, 0.1)";
+          yesBtn.innerHTML = '<i class="fas fa-check-circle"></i> TERIMA KASIH';
+
           setTimeout(() => {
-            noBtn.style.animation = "";
+            const initialX = containerWidth / 2 + buttonWidth / 2 + 20;
+            const initialY = containerHeight / 2 - buttonHeight / 2;
+
+            noBtn.style.transition =
+              "left 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), top 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
+            noBtn.style.left = initialX + "px";
+            noBtn.style.top = initialY + "px";
+
+            noBtnX = initialX;
+            noBtnY = initialY;
+          }, 2000);
+
+          setTimeout(() => {
+            yesBtn.style.borderColor = originalBorder;
+            yesBtn.style.background = "transparent";
+            yesBtn.innerHTML = originalHTML;
+          }, 3000);
+
+          setTimeout(() => {
+            feedbackMessage.classList.remove("show");
+            setTimeout(() => {
+              feedbackMessage.innerHTML = "";
+            }, 500);
+          }, 5000);
+        });
+
+        // Event untuk mencoba klik tombol NO
+        noBtn.addEventListener("click", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          const newPos = getRandomPosition();
+          noBtn.style.transition =
+            "left 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), top 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
+          noBtn.style.left = newPos.x + "px";
+          noBtn.style.top = newPos.y + "px";
+
+          noBtnX = newPos.x;
+          noBtnY = newPos.y;
+
+          const originalHTML = noBtn.innerHTML;
+          noBtn.style.borderColor = "rgba(244, 67, 54, 0.8)";
+          noBtn.style.background = "rgba(244, 67, 54, 0.1)";
+          noBtn.innerHTML = '<i class="fas fa-running"></i> COBA LAGI';
+
+          setTimeout(() => {
+            noBtn.style.borderColor = "rgba(244, 67, 54, 0.3)";
+            noBtn.style.background = "transparent";
+            noBtn.innerHTML = originalHTML;
           }, 600);
         });
+
+        // Event untuk resize window
+        window.addEventListener("resize", function () {
+          const newContainerRect = buttonsContainer.getBoundingClientRect();
+          containerWidth = newContainerRect.width;
+          containerHeight = newContainerRect.height;
+
+          if (window.innerWidth > 768) {
+            const newX = containerWidth / 2 + buttonWidth / 2 + 20;
+            const newY = containerHeight / 2 - buttonHeight / 2;
+
+            noBtn.style.left = newX + "px";
+            noBtn.style.top = newY + "px";
+
+            noBtnX = newX;
+            noBtnY = newY;
+          }
+        });
+
+        // Tambahkan efek hover pada tombol NO (hanya desktop)
+        if (!isMobile) {
+          noBtn.addEventListener("mouseenter", function () {
+            noBtn.style.animation = "subtleRunaway 0.6s ease";
+            setTimeout(() => {
+              noBtn.style.animation = "";
+            }, 600);
+          });
+        }
       }
+
+      // =================== START APP ===================
+      document.addEventListener("DOMContentLoaded", function () {
+        console.log("📱 DOM Content Loaded");
+
+        // Tambahkan elemen status di header jika belum ada
+        const nav = document.querySelector(".nav");
+        if (nav && !document.querySelector(".store-status")) {
+          const statusEl = document.createElement("div");
+          statusEl.className = "store-status";
+          statusEl.innerHTML = `
+        <span class="status-dot"></span>
+        <span class="status-text">Loading...</span>
+      `;
+          nav.appendChild(statusEl);
+        }
+
+        // Initialize feedback buttons
+        initializeFeedbackButtons();
+
+        // Initialize app
+        initializeApp();
+
+        // Debug: Log semua event listener
+        console.log("✅ Event listeners initialized");
+      });
     </script>
   </body>
 </html>
-
