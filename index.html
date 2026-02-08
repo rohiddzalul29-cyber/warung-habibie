@@ -2290,6 +2290,170 @@
         // Debug: Log semua event listener
         console.log("✅ Event listeners initialized");
       });
+      // ========== REALTIME UPDATES ==========
+      function setupRealtimeUpdates() {
+        console.log("🔄 Setting up realtime updates...");
+
+        // Subscribe to store_settings changes
+        supabasePublic
+          .channel("store-status-updates")
+          .on(
+            "postgres_changes",
+            {
+              event: "UPDATE",
+              schema: "public",
+              table: "store_settings",
+            },
+            (payload) => {
+              console.log("📢 Store status updated:", payload.new);
+
+              // Update UI
+              updateStoreStatusUI(payload.new);
+
+              // Show notification
+              showNotification(
+                `Status toko: ${payload.new.is_open ? "BUKA" : "TUTUP"}`,
+                payload.new.is_open ? "success" : "warning",
+              );
+            },
+          )
+          .subscribe();
+
+        // Subscribe to menu changes
+        supabasePublic
+          .channel("menu-updates")
+          .on(
+            "postgres_changes",
+            {
+              event: "*", // INSERT, UPDATE, DELETE
+              schema: "public",
+              table: "menus",
+            },
+            (payload) => {
+              console.log("📢 Menu updated:", payload);
+
+              // Reload menus after 1 second
+              setTimeout(() => {
+                loadMenus();
+                showNotification("Menu diperbarui", "info");
+              }, 1000);
+            },
+          )
+          .subscribe();
+      }
+
+      // Fungsi update UI untuk halaman public
+      function updateStoreStatusUI(settings) {
+        const statusElement = document.getElementById("storeStatus");
+        const statusTextElement = document.getElementById("statusText");
+        const storeHoursElement = document.getElementById("storeHours");
+
+        if (statusElement && statusTextElement) {
+          const isOpen = settings.is_open;
+
+          // Update status indicator
+          statusElement.className = `status-indicator ${isOpen ? "open" : "closed"}`;
+          statusTextElement.textContent = isOpen ? "BUKA" : "TUTUP";
+
+          // Update text color
+          statusTextElement.style.color = isOpen ? "#28a745" : "#dc3545";
+
+          // Update store hours
+          if (storeHoursElement && settings.open_time && settings.close_time) {
+            const openTime = settings.open_time.substring(0, 5);
+            const closeTime = settings.close_time.substring(0, 5);
+            storeHoursElement.textContent = `${openTime} - ${closeTime}`;
+          }
+        }
+      }
+
+      // Fungsi notification
+      function showNotification(message, type = "info") {
+        // Remove existing notification
+        const existing = document.getElementById("statusNotification");
+        if (existing) existing.remove();
+
+        // Create notification
+        const notification = document.createElement("div");
+        notification.id = "statusNotification";
+        notification.className = `status-notification ${type}`;
+        notification.innerHTML = `
+        <i class="fas fa-${type === "success" ? "check-circle" : "exclamation-circle"}"></i>
+        <span>${message}</span>
+        <button onclick="this.parentElement.remove()">
+            <i class="fas fa-times"></i>
+        </button>
+    `;
+
+        // Add to page
+        document.body.appendChild(notification);
+
+        // Auto remove after 5 seconds
+        setTimeout(() => {
+          if (notification.parentElement) {
+            notification.style.opacity = "0";
+            setTimeout(() => notification.remove(), 300);
+          }
+        }, 5000);
+      }
+
+      // CSS untuk notification
+      const notificationStyle = document.createElement("style");
+      notificationStyle.textContent = `
+    .status-notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        z-index: 9999;
+        animation: slideInRight 0.3s ease;
+        border-left: 4px solid;
+    }
+    
+    .status-notification.success {
+        border-left-color: #28a745;
+        background: #d4edda;
+        color: #155724;
+    }
+    
+    .status-notification.warning {
+        border-left-color: #ffc107;
+        background: #fff3cd;
+        color: #856404;
+    }
+    
+    .status-notification.info {
+        border-left-color: #17a2b8;
+        background: #d1ecf1;
+        color: #0c5460;
+    }
+    
+    .status-notification button {
+        background: none;
+        border: none;
+        color: inherit;
+        cursor: pointer;
+        margin-left: 10px;
+    }
+    
+    @keyframes slideInRight {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+`;
+      document.head.appendChild(notificationStyle);
+
+      // Panggil setup saat halaman load
+      document.addEventListener("DOMContentLoaded", () => {
+        // Tunggu 2 detik sebelum setup realtime
+        setTimeout(setupRealtimeUpdates, 2000);
+      });
     </script>
   </body>
 </html>
