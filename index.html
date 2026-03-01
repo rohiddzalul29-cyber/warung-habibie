@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0, user-scalable=yes"
     />
-    <title>Warung Habibie</title>
+    <title>Warung Habibie - Seblak Panas Rasa Nempel</title>
     <link rel="icon" type="image/png" href="wr.png" />
 
     <!-- SUPABASE SDK -->
@@ -85,6 +85,11 @@
         width: 100%;
         z-index: 1000;
         padding: 20px 0;
+        transition: top 0.3s ease;
+      }
+
+      .header.with-banner {
+        top: 160px; /* Geser ke bawah sesuai tinggi banner yang lebih besar */
       }
 
       .nav {
@@ -191,6 +196,11 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        transition: margin-top 0.3s ease;
+      }
+
+      .hero.with-banner {
+        margin-top: 160px; /* Geser ke bawah sesuai tinggi banner yang lebih besar */
       }
 
       .hero::before {
@@ -1002,6 +1012,167 @@
         color: #ff6b35;
       }
 
+      /* BANNER IKLAN DARI ATAS - VERSI DIPERBESAR */
+      .banner-iklan {
+        position: fixed;
+        top: -250px; /* Mulai dari atas (sembunyi) - lebih besar karena gambar diperbesar */
+        left: 0;
+        width: 100%;
+        background: linear-gradient(135deg, #1a0f0b 0%, #2a1a13 100%);
+        border-bottom: 4px solid #ff6b35;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+        z-index: 1001;
+        transition: top 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        padding: 20px 0;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+      }
+
+      .banner-iklan.show {
+        top: 0;
+      }
+
+      .banner-iklan.hide {
+        top: -250px;
+      }
+
+      .banner-iklan-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 40px;
+        gap: 30px;
+      }
+
+      .banner-iklan-link {
+        display: flex;
+        align-items: center;
+        gap: 30px;
+        text-decoration: none;
+        flex: 1;
+      }
+
+      /* GAMBAR DIPERBESAR DAN DIPERJELAS */
+      .banner-iklan-image {
+        width: 140px; /* Diperbesar dari 80px */
+        height: 140px; /* Diperbesar dari 80px */
+        object-fit: cover;
+        object-position: center;
+        border-radius: 15px;
+        border: 4px solid #ff6b35;
+        box-shadow: 0 10px 25px rgba(255, 107, 53, 0.5);
+        transition:
+          transform 0.3s,
+          box-shadow 0.3s;
+        image-rendering: -webkit-optimize-contrast; /* Untuk ketajaman gambar */
+        image-rendering: crisp-edges; /* Untuk ketajaman gambar */
+        -webkit-backface-visibility: hidden; /* Mencegah blur pada animasi */
+        backface-visibility: hidden;
+      }
+
+      .banner-iklan-link:hover .banner-iklan-image {
+        transform: scale(1.05);
+        box-shadow: 0 15px 35px rgba(255, 107, 53, 0.7);
+        border-color: #ff8c42;
+      }
+
+      .banner-iklan-text {
+        flex: 1;
+      }
+
+      .banner-iklan-title {
+        font-size: 2rem; /* Diperbesar dari 1.5rem */
+        font-weight: 900;
+        color: #ff8c42;
+        margin-bottom: 8px;
+        font-family: "Playfair Display", serif;
+        text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        letter-spacing: 0.5px;
+      }
+
+      .banner-iklan-description {
+        font-size: 1.2rem; /* Diperbesar dari 1rem */
+        color: #f5f5f5;
+        margin-bottom: 10px;
+        font-weight: 500;
+      }
+
+      .banner-iklan-promo {
+        display: inline-block;
+        background: linear-gradient(135deg, #ff6b35, #ff8c42);
+        color: white;
+        padding: 8px 25px; /* Diperbesar */
+        border-radius: 50px;
+        font-size: 1.1rem; /* Diperbesar dari 0.9rem */
+        font-weight: 700;
+        box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+
+      .banner-iklan-close {
+        background: rgba(255, 255, 255, 0.15);
+        border: 3px solid rgba(255, 107, 53, 0.6);
+        color: #f5f5f5;
+        width: 50px; /* Diperbesar dari 40px */
+        height: 50px; /* Diperbesar dari 40px */
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 1.4rem; /* Diperbesar dari 1.2rem */
+        opacity: 0;
+        visibility: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      }
+
+      .banner-iklan-close.show {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .banner-iklan-close:hover {
+        background: rgba(255, 107, 53, 0.3);
+        border-color: #ff6b35;
+        transform: rotate(90deg) scale(1.15);
+        box-shadow: 0 8px 20px rgba(255, 107, 53, 0.5);
+      }
+
+      .banner-iklan-timer {
+        background: rgba(255, 107, 53, 0.25);
+        border: 2px solid rgba(255, 107, 53, 0.5);
+        color: #ff8c42;
+        padding: 8px 20px; /* Diperbesar */
+        border-radius: 50px;
+        font-size: 1.1rem; /* Diperbesar dari 0.9rem */
+        font-weight: 700;
+        white-space: nowrap;
+        backdrop-filter: blur(5px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .banner-iklan-timer i {
+        margin-right: 8px;
+        color: #ff8c42;
+      }
+
+      /* Badge promo di banner - DIPERBESAR */
+      .banner-iklan-badge {
+        background: linear-gradient(135deg, #ffd700, #ffa500);
+        color: #000;
+        padding: 5px 15px; /* Diperbesar */
+        border-radius: 30px;
+        font-size: 1rem; /* Diperbesar dari 0.8rem */
+        font-weight: 800;
+        margin-left: 15px;
+        border: 2px solid white;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        text-transform: uppercase;
+      }
+
       /* =================== RESPONSIVE =================== */
       @media (max-width: 992px) {
         .hero-title {
@@ -1052,6 +1223,32 @@
         .menu-quantity-controls {
           width: 100%;
           justify-content: space-between;
+        }
+
+        .header.with-banner {
+          top: 180px;
+        }
+
+        .hero.with-banner {
+          margin-top: 180px;
+        }
+
+        .banner-iklan-image {
+          width: 120px;
+          height: 120px;
+        }
+
+        .banner-iklan-title {
+          font-size: 1.6rem;
+        }
+
+        .banner-iklan-description {
+          font-size: 1.1rem;
+        }
+
+        .banner-iklan-promo {
+          font-size: 1rem;
+          padding: 6px 20px;
         }
       }
 
@@ -1177,6 +1374,71 @@
         .order-grid {
           overflow: visible !important;
         }
+
+        .header.with-banner {
+          top: 280px; /* Lebih besar untuk mobile dengan gambar besar */
+        }
+
+        .hero.with-banner {
+          margin-top: 280px;
+        }
+
+        .banner-iklan {
+          padding: 15px 0;
+        }
+
+        .banner-iklan-content {
+          flex-direction: column;
+          padding: 10px 20px;
+          text-align: center;
+          gap: 15px;
+        }
+
+        .banner-iklan-link {
+          flex-direction: column;
+          text-align: center;
+          gap: 15px;
+        }
+
+        .banner-iklan-image {
+          width: 150px; /* Lebih besar di mobile */
+          height: 150px;
+        }
+
+        .banner-iklan-title {
+          font-size: 1.5rem;
+        }
+
+        .banner-iklan-description {
+          font-size: 1rem;
+        }
+
+        .banner-iklan-promo {
+          font-size: 0.95rem;
+          padding: 6px 18px;
+        }
+
+        .banner-iklan-timer {
+          font-size: 0.9rem;
+          padding: 6px 15px;
+          width: 100%;
+          text-align: center;
+        }
+
+        .banner-iklan-close {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          width: 45px;
+          height: 45px;
+          font-size: 1.3rem;
+        }
+
+        .banner-iklan-badge {
+          font-size: 0.9rem;
+          padding: 4px 12px;
+          margin-left: 5px;
+        }
       }
 
       @media (max-width: 480px) {
@@ -1240,6 +1502,27 @@
         .section-subtitle {
           font-size: 0.95rem;
         }
+
+        .header.with-banner {
+          top: 300px;
+        }
+
+        .hero.with-banner {
+          margin-top: 300px;
+        }
+
+        .banner-iklan-image {
+          width: 130px;
+          height: 130px;
+        }
+
+        .banner-iklan-title {
+          font-size: 1.3rem;
+        }
+
+        .banner-iklan-description {
+          font-size: 0.9rem;
+        }
       }
 
       /* FIX KHUSUS UNTUK iOS SAFARI */
@@ -1251,8 +1534,56 @@
     </style>
   </head>
   <body>
+    <!-- BANNER IKLAN DARI ATAS - VERSI DIPERBESAR -->
+    <div class="banner-iklan" id="bannerIklan">
+      <div class="banner-iklan-content">
+        <a
+          href="mbg.html"
+          class="banner-iklan-link"
+          id="bannerLink"
+          target="_blank"
+        >
+          <!-- GAMBAR DIPERBESAR -->
+          <img
+            src="mbg.jpeg"
+            alt="Marhaban Ya Ramadan"
+            class="banner-iklan-image"
+            loading="eager"
+          />
+
+          <div class="banner-iklan-text">
+            <div class="banner-iklan-title">
+              MARHABAN YA RAMADAN
+              <span class="banner-iklan-badge">MBG</span>
+            </div>
+            <div class="banner-iklan-description">
+              Paket MARI BERBAGI GAES - Spesial Ramadan 2025
+            </div>
+            <div
+              class="banner-iklan-description"
+              style="font-size: 0.95rem; color: #ff8c42; margin-top: 5px"
+            >
+              <i class="fas fa-map-marker-alt"></i> Desa Seri Tanjung, Ogan Ilir
+            </div>
+            <span class="banner-iklan-promo">
+              <i class="fas fa-gift"></i> Klik untuk Info Lengkap
+            </span>
+          </div>
+        </a>
+
+        <div class="banner-iklan-timer" id="bannerTimer">
+          <i class="fas fa-clock"></i>
+          <span id="countdownText">Tutup dalam 5 detik</span>
+        </div>
+
+        <button class="banner-iklan-close" id="closeBanner">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+
     <!-- Header / Navigation -->
-    <header class="header">
+    <header class="header" id="header">
       <nav class="nav">
         <div class="nav-logo">Warung Habibie</div>
         <div class="store-status">
@@ -1497,7 +1828,6 @@
 
     <script>
       // =================== KONFIGURASI SUPABASE ===================
-      // GANTI DENGAN URL DAN KEY DARI PROJECT SUPABASE KAMU
       const SUPABASE_URL = "https://eumouuwgmayjyagqxgti.supabase.co";
       const SUPABASE_ANON_KEY =
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV1bW91dXdnbWF5anlhZ3F4Z3RpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA0MDkzNzAsImV4cCI6MjA4NTk4NTM3MH0.B9wihoEOoo2hCbAVbr1q446HUxdHrgFGtPhKRhfVVAQ";
@@ -1780,7 +2110,7 @@
           container.appendChild(menuItem);
         });
 
-        // Event listeners untuk tombol kuantitas - FIXED VERSION
+        // Event listeners untuk tombol kuantitas
         container.querySelectorAll(".quantity-btn.plus").forEach((btn) => {
           btn.addEventListener("click", function () {
             const id = parseInt(this.dataset.id);
@@ -1944,7 +2274,7 @@
         });
       });
 
-      // Tab kategori di form - FIXED VERSION
+      // Tab kategori di form
       document.querySelectorAll(".category-tab-form").forEach((tab) => {
         tab.addEventListener("click", function () {
           document.querySelectorAll(".category-tab-form").forEach((t) => {
@@ -1967,7 +2297,7 @@
         });
       });
 
-      // Tombol Pesan via WhatsApp - FIXED VERSION
+      // Tombol Pesan via WhatsApp
       const pesanButton = document.getElementById("btnPesan");
       if (pesanButton) {
         pesanButton.addEventListener("click", function () {
@@ -2049,7 +2379,6 @@
       }
 
       // =================== FEEDBACK INTERAKTIF ===================
-      // Inisialisasi feedback buttons
       function initializeFeedbackButtons() {
         const yesBtn = document.getElementById("yesBtn");
         const noBtn = document.getElementById("noBtn");
@@ -2265,6 +2594,108 @@
         }
       }
 
+      // =================== BANNER IKLAN ===================
+      function initializeBannerIklan() {
+        const banner = document.getElementById("bannerIklan");
+        const closeBtn = document.getElementById("closeBanner");
+        const bannerLink = document.getElementById("bannerLink");
+        const countdownText = document.getElementById("countdownText");
+        const header = document.getElementById("header");
+        const hero = document.getElementById("hero");
+
+        let countdown = 5; // 5 detik
+        let timer;
+        let canClose = false;
+
+        // Tampilkan banner setelah 1 detik (biar halaman load dulu)
+        setTimeout(function () {
+          banner.classList.add("show");
+
+          // Geser header dan hero ke bawah
+          header.classList.add("with-banner");
+          hero.classList.add("with-banner");
+
+          // Mulai countdown
+          countdownText.textContent = `Tutup dalam ${countdown} detik`;
+
+          timer = setInterval(function () {
+            countdown--;
+            countdownText.textContent = `Tutup dalam ${countdown} detik`;
+
+            if (countdown <= 0) {
+              clearInterval(timer);
+              countdownText.textContent = "Silakan tutup iklan";
+
+              // Tampilkan tombol close
+              closeBtn.classList.add("show");
+              canClose = true;
+
+              // Animasi tombol close
+              closeBtn.style.animation = "pulse 1s 2";
+              setTimeout(() => {
+                closeBtn.style.animation = "";
+              }, 2000);
+            }
+          }, 1000);
+        }, 1000);
+
+        // Fungsi untuk menutup banner
+        function closeBanner() {
+          if (!canClose) {
+            // Jika belum 5 detik, kasih peringatan
+            countdownText.textContent = `Tunggu ${countdown} detik dulu ya!`;
+            closeBtn.style.background = "rgba(244, 67, 54, 0.2)";
+            closeBtn.style.borderColor = "#f44336";
+
+            setTimeout(() => {
+              closeBtn.style.background = "rgba(255, 255, 255, 0.15)";
+              closeBtn.style.borderColor = "rgba(255, 107, 53, 0.6)";
+              countdownText.textContent = `Tutup dalam ${countdown} detik`;
+            }, 1000);
+            return;
+          }
+
+          banner.classList.remove("show");
+          banner.classList.add("hide");
+
+          // Kembalikan header dan hero ke posisi semula
+          header.classList.remove("with-banner");
+          hero.classList.remove("with-banner");
+
+          if (timer) clearInterval(timer);
+
+          // Simpan ke localStorage agar tidak muncul lagi dalam 1 jam
+          const now = new Date().getTime();
+          localStorage.setItem("bannerLastShown", now);
+        }
+
+        // Event listener untuk tombol close
+        if (closeBtn) {
+          closeBtn.addEventListener("click", closeBanner);
+        }
+
+        // Event listener untuk link banner
+        bannerLink.addEventListener("click", function (e) {
+          console.log("Banner diklik, membuka WhatsApp...");
+
+          // Tutup banner setelah klik link (opsional)
+          setTimeout(closeBanner, 1000);
+        });
+
+        // Cek apakah sudah pernah ditampilkan dalam 1 jam terakhir
+        const lastShown = localStorage.getItem("bannerLastShown");
+        if (lastShown) {
+          const oneHour = 60 * 60 * 1000; // 1 jam dalam milidetik
+          const now = new Date().getTime();
+
+          if (now - parseInt(lastShown) < oneHour) {
+            // Jika kurang dari 1 jam, jangan tampilkan banner
+            console.log("Banner sudah ditampilkan dalam 1 jam terakhir");
+            return;
+          }
+        }
+      }
+
       // =================== START APP ===================
       document.addEventListener("DOMContentLoaded", function () {
         console.log("📱 DOM Content Loaded");
@@ -2284,175 +2715,13 @@
         // Initialize feedback buttons
         initializeFeedbackButtons();
 
+        // Initialize banner iklan
+        initializeBannerIklan();
+
         // Initialize app
         initializeApp();
 
-        // Debug: Log semua event listener
         console.log("✅ Event listeners initialized");
-      });
-      // ========== REALTIME UPDATES ==========
-      function setupRealtimeUpdates() {
-        console.log("🔄 Setting up realtime updates...");
-
-        // Subscribe to store_settings changes
-        supabasePublic
-          .channel("store-status-updates")
-          .on(
-            "postgres_changes",
-            {
-              event: "UPDATE",
-              schema: "public",
-              table: "store_settings",
-            },
-            (payload) => {
-              console.log("📢 Store status updated:", payload.new);
-
-              // Update UI
-              updateStoreStatusUI(payload.new);
-
-              // Show notification
-              showNotification(
-                `Status toko: ${payload.new.is_open ? "BUKA" : "TUTUP"}`,
-                payload.new.is_open ? "success" : "warning",
-              );
-            },
-          )
-          .subscribe();
-
-        // Subscribe to menu changes
-        supabasePublic
-          .channel("menu-updates")
-          .on(
-            "postgres_changes",
-            {
-              event: "*", // INSERT, UPDATE, DELETE
-              schema: "public",
-              table: "menus",
-            },
-            (payload) => {
-              console.log("📢 Menu updated:", payload);
-
-              // Reload menus after 1 second
-              setTimeout(() => {
-                loadMenus();
-                showNotification("Menu diperbarui", "info");
-              }, 1000);
-            },
-          )
-          .subscribe();
-      }
-
-      // Fungsi update UI untuk halaman public
-      function updateStoreStatusUI(settings) {
-        const statusElement = document.getElementById("storeStatus");
-        const statusTextElement = document.getElementById("statusText");
-        const storeHoursElement = document.getElementById("storeHours");
-
-        if (statusElement && statusTextElement) {
-          const isOpen = settings.is_open;
-
-          // Update status indicator
-          statusElement.className = `status-indicator ${isOpen ? "open" : "closed"}`;
-          statusTextElement.textContent = isOpen ? "BUKA" : "TUTUP";
-
-          // Update text color
-          statusTextElement.style.color = isOpen ? "#28a745" : "#dc3545";
-
-          // Update store hours
-          if (storeHoursElement && settings.open_time && settings.close_time) {
-            const openTime = settings.open_time.substring(0, 5);
-            const closeTime = settings.close_time.substring(0, 5);
-            storeHoursElement.textContent = `${openTime} - ${closeTime}`;
-          }
-        }
-      }
-
-      // Fungsi notification
-      function showNotification(message, type = "info") {
-        // Remove existing notification
-        const existing = document.getElementById("statusNotification");
-        if (existing) existing.remove();
-
-        // Create notification
-        const notification = document.createElement("div");
-        notification.id = "statusNotification";
-        notification.className = `status-notification ${type}`;
-        notification.innerHTML = `
-        <i class="fas fa-${type === "success" ? "check-circle" : "exclamation-circle"}"></i>
-        <span>${message}</span>
-        <button onclick="this.parentElement.remove()">
-            <i class="fas fa-times"></i>
-        </button>
-    `;
-
-        // Add to page
-        document.body.appendChild(notification);
-
-        // Auto remove after 5 seconds
-        setTimeout(() => {
-          if (notification.parentElement) {
-            notification.style.opacity = "0";
-            setTimeout(() => notification.remove(), 300);
-          }
-        }, 5000);
-      }
-
-      // CSS untuk notification
-      const notificationStyle = document.createElement("style");
-      notificationStyle.textContent = `
-    .status-notification {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: white;
-        padding: 15px 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        z-index: 9999;
-        animation: slideInRight 0.3s ease;
-        border-left: 4px solid;
-    }
-    
-    .status-notification.success {
-        border-left-color: #28a745;
-        background: #d4edda;
-        color: #155724;
-    }
-    
-    .status-notification.warning {
-        border-left-color: #ffc107;
-        background: #fff3cd;
-        color: #856404;
-    }
-    
-    .status-notification.info {
-        border-left-color: #17a2b8;
-        background: #d1ecf1;
-        color: #0c5460;
-    }
-    
-    .status-notification button {
-        background: none;
-        border: none;
-        color: inherit;
-        cursor: pointer;
-        margin-left: 10px;
-    }
-    
-    @keyframes slideInRight {
-        from { transform: translateX(100%); opacity: 0; }
-        to { transform: translateX(0); opacity: 1; }
-    }
-`;
-      document.head.appendChild(notificationStyle);
-
-      // Panggil setup saat halaman load
-      document.addEventListener("DOMContentLoaded", () => {
-        // Tunggu 2 detik sebelum setup realtime
-        setTimeout(setupRealtimeUpdates, 2000);
       });
     </script>
   </body>
